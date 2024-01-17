@@ -47,17 +47,17 @@ class PredictLogger(Callback):
         self.probs = np.array(self.probs)
         self.preds = np.array(self.preds)
         self.paths = np.array(self.paths)
-        df_probs = pd.DataFrame(data = np.concatenateenate((self.paths[:,None],self.probs),axis=1), columns = ['path']+pl_module.AUs).sort_values(by=['path'])
-        df_probs.to_csv(os.path.join(self.logdir,'Predcition_probs.csv'),index=False)
+        df_probs = pd.DataFrame(data = np.concatenate((self.paths[:,None],self.probs),axis=1), columns = ['path']+pl_module.AUs).sort_values(by=['path'])
+        df_probs.to_csv(os.path.join(self.logdir,'Pred_prob.csv'),index=False)
         
-        df_preds = pd.DataFrame(data = np.concatenateenate((self.paths[:,None],self.preds),axis=1), columns = ['path']+pl_module.AUs).sort_values(by=['path'])
-        df_preds.to_csv(os.path.join(self.logdir,'Predcition_preds.csv'),index=False)
+        df_preds = pd.DataFrame(data = np.concatenate((self.paths[:,None],self.preds),axis=1), columns = ['path']+pl_module.AUs).sort_values(by=['path'])
+        df_preds.to_csv(os.path.join(self.logdir,'Pred_pred.csv'),index=False)
         self.reset()
         
         
-    def on_predict_end(self, trainer: Trainer, pl_module: LightningModule) -> None:
+    '''def on_predict_end(self, trainer: Trainer, pl_module: LightningModule) -> None:
         pl_module.logger.experiment[f'prediction/probs'].upload(os.path.join(self.logdir,'Predcition_probs.csv'))
-        pl_module.logger.experiment[f'prediction/preds'].upload(os.path.join(self.logdir,'Predcition_preds.csv'))
+        pl_module.logger.experiment[f'prediction/preds'].upload(os.path.join(self.logdir,'Predcition_preds.csv'))'''
 
 
 class MetricLogger(Callback):

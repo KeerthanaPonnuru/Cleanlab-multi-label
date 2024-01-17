@@ -41,6 +41,7 @@ class ICUold(FacesBase):
 
 
 # ICU##############################################################################################
+        
 class ICU(FacesBase):
     def __init__(self,aus,split=None,size=225, mcManager=None):
         super().__init__()
@@ -55,7 +56,7 @@ class ICU(FacesBase):
         labels={'aus':au_labels,'dataset':'ICU' }
         self.data = ImagePaths(paths,aus,landmark_paths,labels,size,mcManager)
 
-
+'''
 class ICUPred(Dataset):
     def __init__(self,imgspaths,size=225):
         super().__init__()
@@ -73,8 +74,47 @@ class ICUPred(Dataset):
         image = (image/127.5 - 1.0).astype(np.float32)
         sample = {'image':image,'path':path}
         return sample
-        
-    
+'''
+
+class ICUPred(Dataset):
+    def __init__(self, imgspaths=None, csv_path=None, column_name='path', size=225):
+        super().__init__()
+        self.size = size
+        if imgspaths is not None:
+            self.paths = []
+            for imgspath in imgspaths:
+                self.paths += glob.glob(imgspath)
+        elif csv_path is not None:
+            self.df = pd.read_csv(csv_path)
+            self.column_name = column_name
+        else:
+            raise ValueError("Either 'imgspaths' or 'csv_path' must be provided.")
+
+    def __len__(self):
+        if hasattr(self, 'paths'):
+            return len(self.paths)
+        elif hasattr(self, 'df'):
+            return len(self.df)
+        else:
+            raise ValueError("Dataset not properly initialized.")
+
+    def __getitem__(self, index):
+        if hasattr(self, 'paths'):
+            path = self.paths[index]
+        elif hasattr(self, 'df'):
+            path = self.df.loc[index, self.column_name]
+        else:
+            raise ValueError("Dataset not properly initialized.")
+
+        image = Image.open(path)
+        image = image.resize((self.size, self.size))
+        image = np.array(image)
+        image = (image / 127.5 - 1.0).astype(np.float32)
+        sample = {'image': image, 'path': path}
+        return sample
+
+
+
 
 # BP4D##############################################################################################
 class BP4D(FacesBase):

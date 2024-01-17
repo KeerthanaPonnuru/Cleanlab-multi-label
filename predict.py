@@ -15,7 +15,6 @@ from neptune import Run
 from callbacks import CUDACallback,PredictLogger
 
 from data.dataset import ICUPred
-
 from torch.utils.data import DataLoader
 
 
@@ -67,21 +66,20 @@ def main():
 
 
     model = instantiate_from_config(config.model)
-
-    dataset = ICUPred(imgspaths=opt.data_path,size=224)
+    dataset = ICUPred(csv_path='data/datafiles/annotationRecords1.csv',column_name='filepath',size=224)
     dataloader = DataLoader(dataset,batch_size=200,shuffle=False,num_workers=4)
 
 
     trainer_config = {'accelerator':'gpu',
-                      'devices':1,}
+                    'devices':1,}
     
-    id = config.lightning.logger_id
-    run = Run(project='AUdetection',name=nowname,with_id=id,api_token=os.getenv('NEPTUNE_API_KEY'))
-    logger = NeptuneLogger(run=run,prefix="testing")
+    #id = config.lightning.logger_id
+    #run = Run(project='AUdetection',name=nowname,with_id=id,api_token=os.getenv('NEPTUNE_API_KEY'))
+    #logger = NeptuneLogger(run=run,prefix="testing")
 
     locallogger = PredictLogger(logdir=logdir)
 
-    trainer = Trainer(logger=logger,callbacks=[locallogger],**trainer_config)
+    trainer = Trainer(callbacks=[locallogger],**trainer_config)
     trainer.predict(model = model, dataloaders = dataloader, ckpt_path = ckpt)
 
 
