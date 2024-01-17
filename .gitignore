@@ -15,9 +15,7 @@ inference/
 *.txt
 *.csv
 
-# Jupyter Notebook
-.ipynb_checkpoints
-**/*.ipynb
+
 
 #weights and checkpoints
 **/*.ckpt
