@@ -27,7 +27,7 @@ from typing import List, TypeVar, Dict, Any, Optional, Tuple, TYPE_CHECKING
 from cleanlab.internal.validation import assert_valid_inputs
 from cleanlab.internal.util import get_num_classes
 from cleanlab.internal.multilabel_utils import int2onehot
-from cleanlab.internal.multilabel_scorer import MultilabelScorer, ClassLabelScorer, Aggregator
+from multilabel_scorer import MultilabelScorer, ClassLabelScorer, Aggregator
 
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -128,7 +128,7 @@ def get_label_quality_scores(
     array([0.9, 0.5])
     """
     #binary_labels = _labels_to_binary(labels, pred_probs)
-    print('hello')
+    
     scorer, base_scorer_kwargs = _create_multilabel_scorer(
         method=method,
         adjust_pred_probs=adjust_pred_probs,
